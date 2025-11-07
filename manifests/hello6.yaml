@@ -9,7 +9,7 @@ metadata:
   name: hello6
   namespace: demo6
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels: { app: hello6 }
   template:
@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: web
-        image: ghcr.io/nginxinc/nginx-unprivileged:stable
+        image: busybox:1.36
         ports: [{ containerPort: 8080 }]
         command: ["sh","-c","printf 'HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nHello from Argo CD\n' | nc -l -p 8080 -k"]
 ---
