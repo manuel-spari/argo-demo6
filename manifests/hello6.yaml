@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: demo6
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello6
+  namespace: demo6
+spec:
+  replicas: 2
+  selector:
+    matchLabels: { app: hello6 }
+  template:
+    metadata:
+      labels: { app: hello6 }
+    spec:
+      containers:
+      - name: web
+        image: ghcr.io/nginxinc/nginx-unprivileged:stable
+        ports: [{ containerPort: 8080 }]
+        command: ["sh","-c","printf 'HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nHello from Argo CD\n' | nc -l -p 8080 -k"]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello6
+  namespace: demo6
+spec:
+  selector: { app: hello6 }
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8080
+  type: ClusterIP
